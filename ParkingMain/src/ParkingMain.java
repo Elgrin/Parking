@@ -6,83 +6,84 @@ public class ParkingMain {
 	
 	private static Parking parking;
 	
-	//Список букв, разрешенных в гос. номерах авто
-	private static final String Alphabet = "АВЕКМНОРСТУХ";
+	//РЎРїРёСЃРѕРє Р±СѓРєРІ, СЂР°Р·СЂРµС€РµРЅРЅС‹С… РІ РіРѕСЃ. РЅРѕРјРµСЂР°С… Р°РІС‚Рѕ
+	private static final String Alphabet = "РђР’Р•РљРњРќРћР РЎРўРЈРҐ";
 	
 	public static void main(String[] args) {
 		
-		System.out.println("> Введите размер парковки: ");
+		System.out.println("> Р’РІРµРґРёС‚Рµ СЂР°Р·РјРµСЂ РїР°СЂРєРѕРІРєРё: ");
 		
 		int space = 0;
 		boolean lock = true;
 		Scanner in = new Scanner(System.in);
 		
 		/*
-		 * Ввод размера парковки
+		 * Р’РІРѕРґ СЂР°Р·РјРµСЂР° РїР°СЂРєРѕРІРєРё
 		 */
+		
 		while(lock) {
 			in = new Scanner(System.in);
 			if(in.hasNextInt()) {
 				
 		        space = in.nextInt();
 		        if(space < 1) {
-		        	System.out.println("> Размер не может быть больше 1.");
+		        	System.out.println("> Р Р°Р·РјРµСЂ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ 1.");
 		        }
 		        else 
 		        	lock = false;
 				}
 				else {
-					System.out.println("> Ошибка ввода. Пожалуйста, введите число.");
+					System.out.println("> РћС€РёР±РєР° РІРІРѕРґР°. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ С‡РёСЃР»Рѕ.");
 				}
 		}
 		
-		//Инициализируем парковку с указанным размером
+		//РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РїР°СЂРєРѕРІРєСѓ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј СЂР°Р·РјРµСЂРѕРј
 		parking = new Parking(space);
 		
 		/*
-		 * Консоль команд
+		 * РљРѕРЅСЃРѕР»СЊ РєРѕРјР°РЅРґ
 		 */
 		
 		lock = true;
 		while(lock) {
-			System.out.println("> Введите команду:");
+			System.out.println("> Р’РІРµРґРёС‚Рµ РєРѕРјР°РЅРґСѓ:");
 			in = new Scanner(System.in);
 			
 			if(in.hasNext("l")) {
-				//вывод списка авто на парковке
+				//РІС‹РІРѕРґ СЃРїРёСЃРєР° Р°РІС‚Рѕ РЅР° РїР°СЂРєРѕРІРєРµ
 				getCarsList();
 				continue;	
 			} else if(in.hasNext("c")) {
-				//Вывод свободного места на парковке
-				System.out.println("Осталось " + getFreeSpace() + " мест.");
+				//Р’С‹РІРѕРґ СЃРІРѕР±РѕРґРЅРѕРіРѕ РјРµСЃС‚Р° РЅР° РїР°СЂРєРѕРІРєРµ
+				System.out.println("РћСЃС‚Р°Р»РѕСЃСЊ " + getFreeSpace() + " РјРµСЃС‚.");
 				continue;
 			} else if(in.hasNext("e")) {
-				//выход из приложения
+				//РІС‹С…РѕРґ РёР· РїСЂРёР»РѕР¶РµРЅРёСЏ
 				lock = false;
-				System.out.println("> Выполнение завершено.");
+				System.out.println("> Р’С‹РїРѕР»РЅРµРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ.");
 				continue;	
 			} if(in.hasNext("p:[1-9]\\d*")) {
-				//добавление определенного числа авто
+				//РґРѕР±Р°РІР»РµРЅРёРµ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ С‡РёСЃР»Р° Р°РІС‚Рѕ
 				String parts[] = in.nextLine().split(":");
 				onNewCar(Integer.parseInt(parts[1]));
 				continue;	
 			}
 			else if(in.hasNext("u:[1-9]\\d*"))  {
-				//удаление авто с парковочного места 
+				//СѓРґР°Р»РµРЅРёРµ Р°РІС‚Рѕ СЃ РїР°СЂРєРѕРІРѕС‡РЅРѕРіРѕ РјРµСЃС‚Р° 
 				String command = in.nextLine();
 				int[] arrMass = new int[1];
 				arrMass[0] = Integer.parseInt(command.replaceAll("u:",""));
 				onOutCars(arrMass);
 				continue;	
 			} else if(in.hasNext("(u:\\[[1-9]+((,[0-9]+)*)\\])"))  {
-				//удаление авто с парковочных мест из списка
+				//СѓРґР°Р»РµРЅРёРµ Р°РІС‚Рѕ СЃ РїР°СЂРєРѕРІРѕС‡РЅС‹С… РјРµСЃС‚ РёР· СЃРїРёСЃРєР°
 				String command = in.nextLine();
 				onOutCars(convertStringToInt(command
 						.replaceAll("(u:|\\[|\\])","").split(",")));
 				continue;
 			} else {
-				//Если команда не найдена
-				System.out.println("> Команда не найдена. Повторите запрос");
+				//Р•СЃР»Рё РєРѕРјР°РЅРґР° РЅРµ РЅР°Р№РґРµРЅР°
+				System.out.println("> РљРѕРјР°РЅРґР° РЅРµ РЅР°Р№РґРµРЅР°. РџРѕРІС‚РѕСЂРёС‚Рµ Р·Р°РїСЂРѕСЃ");
 				continue;	
 			}
 		}
@@ -90,26 +91,26 @@ public class ParkingMain {
 	}
 	
 	
-	//Добавление авто
+	//Р”РѕР±Р°РІР»РµРЅРёРµ Р°РІС‚Рѕ
 	private static void onNewCar(int count) {
 		
-		//Отдельный поток, чтобы остальные команды не блокировались
+		//РћС‚РґРµР»СЊРЅС‹Р№ РїРѕС‚РѕРє, С‡С‚РѕР±С‹ РѕСЃС‚Р°Р»СЊРЅС‹Рµ РєРѕРјР°РЅРґС‹ РЅРµ Р±Р»РѕРєРёСЂРѕРІР°Р»РёСЃСЊ
 		Thread addCar = new Thread()
 		{
 		     public void run()
 		     {
-		 		if(parking.getTicketsCount() == 0) {
-					System.out.println("На парковке нет мест. Если никто не покинет парковку в ближайщее время,"
-							+ "то недождавшиеся машины будут уезжать.\n"
-							+ "Если места появятся, то въезд будет осуществляться в порядке очереди.");
-				} else if(count > parking.getTicketsCount()) {
-					System.out.println("На парковке осталось места меньше, чем количество автомобилей, "
-							+ "которые туда хотят заехать. \nНа данный момент заехать сможет только: " 
-							+ Integer.toString(getFreeSpace()) + " машин(ы) из " + count + ".\n"
-							+ "Если никто не покинет парковку в ближайщее время, "
-							+ "то недождавшиеся машины будут уезжать.\n"
-							+ "Если места появятся, то въезд будет осуществляться в порядке очереди.");
-					}
+		    	 if(parking.getTicketsCount() == 0) {
+						System.out.println("РќР° РїР°СЂРєРѕРІРєРµ РЅРµС‚ РјРµСЃС‚. Р•СЃР»Рё РЅРёРєС‚Рѕ РЅРµ РїРѕРєРёРЅРµС‚ РїР°СЂРєРѕРІРєСѓ РІ Р±Р»РёР¶Р°Р№С‰РµРµ РІСЂРµРјСЏ,"
+								+ "С‚Рѕ РЅРµРґРѕР¶РґР°РІС€РёРµСЃСЏ РјР°С€РёРЅС‹ Р±СѓРґСѓС‚ СѓРµР·Р¶Р°С‚СЊ.\n"
+								+ "Р•СЃР»Рё РјРµСЃС‚Р° РїРѕСЏРІСЏС‚СЃСЏ, С‚Рѕ РІСЉРµР·Рґ Р±СѓРґРµС‚ РѕСЃСѓС‰РµСЃС‚РІР»СЏС‚СЊСЃСЏ РІ РїРѕСЂСЏРґРєРµ РѕС‡РµСЂРµРґРё.");
+					} else if(count > parking.getTicketsCount()) {
+						System.out.println("РќР° РїР°СЂРєРѕРІРєРµ РѕСЃС‚Р°Р»РѕСЃСЊ РјРµСЃС‚Р° РјРµРЅСЊС€Рµ, С‡РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р°РІС‚РѕРјРѕР±РёР»РµР№, "
+								+ "РєРѕС‚РѕСЂС‹Рµ С‚СѓРґР° С…РѕС‚СЏС‚ Р·Р°РµС…Р°С‚СЊ. \nРќР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р·Р°РµС…Р°С‚СЊ СЃРјРѕР¶РµС‚ С‚РѕР»СЊРєРѕ: " 
+								+ Integer.toString(getFreeSpace()) + " РјР°С€РёРЅ(С‹) РёР· " + count + ".\n"
+								+ "Р•СЃР»Рё РЅРёРєС‚Рѕ РЅРµ РїРѕРєРёРЅРµС‚ РїР°СЂРєРѕРІРєСѓ РІ Р±Р»РёР¶Р°Р№С‰РµРµ РІСЂРµРјСЏ, "
+								+ "С‚Рѕ РЅРµРґРѕР¶РґР°РІС€РёРµСЃСЏ РјР°С€РёРЅС‹ Р±СѓРґСѓС‚ СѓРµР·Р¶Р°С‚СЊ.\n"
+								+ "Р•СЃР»Рё РјРµСЃС‚Р° РїРѕСЏРІСЏС‚СЃСЏ, С‚Рѕ РІСЉРµР·Рґ Р±СѓРґРµС‚ РѕСЃСѓС‰РµСЃС‚РІР»СЏС‚СЊСЃСЏ РІ РїРѕСЂСЏРґРєРµ РѕС‡РµСЂРµРґРё.");
+						}
 				/*
 				Car[] cars = new Car[count];
 				
@@ -129,12 +130,12 @@ public class ParkingMain {
 		 		
 				for(int i = 0; i < count; i++) {
 					final Random random = new Random();
-					//Отдельный поток для генерации авто, чтобы не блокировать другие потоки
+					//РћС‚РґРµР»СЊРЅС‹Р№ РїРѕС‚РѕРє РґР»СЏ РіРµРЅРµСЂР°С†РёРё Р°РІС‚Рѕ, С‡С‚РѕР±С‹ РЅРµ Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ РґСЂСѓРіРёРµ РїРѕС‚РѕРєРё
 					Thread carCreate = new Thread()
 					{
 					     public void run()
 					     {
-					    	 //Генерация номера авто и добавление его на парковку
+					    	 //Р“РµРЅРµСЂР°С†РёСЏ РЅРѕРјРµСЂР° Р°РІС‚Рѕ Рё РґРѕР±Р°РІР»РµРЅРёРµ РµРіРѕ РЅР° РїР°СЂРєРѕРІРєСѓ
 					    	 String num = Character.toString(Alphabet.charAt(random.nextInt(12)))
 										+ (random.nextInt(9))
 										+ (random.nextInt(9))
@@ -152,7 +153,7 @@ public class ParkingMain {
 		addCar.start();
 	}
 	
-	//Преобразование String array to ing array
+	//РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ String array to ing array
 	private static int[] convertStringToInt(String[] mass) {
 		int[] intMass = new int[mass.length];
 		
@@ -162,7 +163,7 @@ public class ParkingMain {
 		return intMass;
 	}
 	
-	//Удаление авто с парковки в отдельном потоке
+	//РЈРґР°Р»РµРЅРёРµ Р°РІС‚Рѕ СЃ РїР°СЂРєРѕРІРєРё РІ РѕС‚РґРµР»СЊРЅРѕРј РїРѕС‚РѕРєРµ
 	private static void onOutCars(int mass[]) {
 		Thread t = new Thread()
 		{
@@ -174,12 +175,12 @@ public class ParkingMain {
 		t.start();
 	}
 	
-	//Список авто на парковке
+	//РЎРїРёСЃРѕРє Р°РІС‚Рѕ РЅР° РїР°СЂРєРѕРІРєРµ
 	private static void getCarsList() {
 		parking.getCarsList();
 	}
 	
-	//Сколько осталось места на парковке
+	//РЎРєРѕР»СЊРєРѕ РѕСЃС‚Р°Р»РѕСЃСЊ РјРµСЃС‚Р° РЅР° РїР°СЂРєРѕРІРєРµ
 	private static int getFreeSpace() {
 		return parking.getTicketsCount();
 	}

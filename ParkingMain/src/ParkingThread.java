@@ -20,36 +20,36 @@ public class ParkingThread extends ParkingParent{
 	public void run() {
 		try
         {
-			//Вход в очередь на въезд
+			//Р’С…РѕРґ РІ РѕС‡РµСЂРµРґСЊ РЅР° РІСЉРµР·Рґ
 			semIn.acquire(); 
 			
-			//Блокируем доступ к списку билетов
+			//Р‘Р»РѕРєРёСЂСѓРµРј РґРѕСЃС‚СѓРї Рє СЃРїРёСЃРєСѓ Р±РёР»РµС‚РѕРІ
 			synchronized (tickets) {
 				
 				if(tickets.size() >= 1 ) {
-					//Выдаем билет со случайным номером
+					//Р’С‹РґР°РµРј Р±РёР»РµС‚ СЃРѕ СЃР»СѓС‡Р°Р№РЅС‹Рј РЅРѕРјРµСЂРѕРј
 					final Random random = new Random();
 					int r = (random.nextInt(tickets.size()));
 					int ticketNumber = tickets.get(r).getNumber();
 					tickets.remove(r);
 					
 					/*
-					 * Добавляем данные о номера авто 
-					 * и номер билета в хеш-таблицу
+					 * Р”РѕР±Р°РІР»СЏРµРј РґР°РЅРЅС‹Рµ Рѕ РЅРѕРјРµСЂР° Р°РІС‚Рѕ 
+					 * Рё РЅРѕРјРµСЂ Р±РёР»РµС‚Р° РІ С…РµС€-С‚Р°Р±Р»РёС†Сѓ
 					 */
 					place.carID = carID;
 					place.ticketID = ticketNumber;
 					cars.putIfAbsent(ticketNumber, place);
 					
 					/*
-					 * Эмуляция времени въезда от 1 до 5 секунд
+					 * Р­РјСѓР»СЏС†РёСЏ РІСЂРµРјРµРЅРё РІСЉРµР·РґР° РѕС‚ 1 РґРѕ 5 СЃРµРєСѓРЅРґ
 					 */
 					final Random randomTime = new Random();
 					Thread.sleep(randomTime.nextInt(5000) + 1000);
 				}
 			}
 			
-			//Освобождаем очередь на въезд
+			//РћСЃРІРѕР±РѕР¶РґР°РµРј РѕС‡РµСЂРµРґСЊ РЅР° РІСЉРµР·Рґ
 			semIn.release();
 			
         }

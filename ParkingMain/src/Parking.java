@@ -5,23 +5,23 @@ import java.util.concurrent.Semaphore;
 
 public class Parking extends Thread{
 	
-	//Размер парковки
+	//Р Р°Р·РјРµСЂ РїР°СЂРєРѕРІРєРё
 	private int space;
 	
-	//Флаг для въезда по 2 авто, с пропуском в порядке очереди
+	//Р¤Р»Р°Рі РґР»СЏ РІСЉРµР·РґР° РїРѕ 2 Р°РІС‚Рѕ, СЃ РїСЂРѕРїСѓСЃРєРѕРј РІ РїРѕСЂСЏРґРєРµ РѕС‡РµСЂРµРґРё
 	private Semaphore semIn = new Semaphore(2, true);
 	
-	//Флаг для выезда по 2 авто, с выпуском в порядке очереди
+	//Р¤Р»Р°Рі РґР»СЏ РІС‹РµР·РґР° РїРѕ 2 Р°РІС‚Рѕ, СЃ РІС‹РїСѓСЃРєРѕРј РІ РїРѕСЂСЏРґРєРµ РѕС‡РµСЂРµРґРё
 	private Semaphore semOut = new Semaphore(2, true);
 	
-	//Таблица для хранения авто
+	//РўР°Р±Р»РёС†Р° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р°РІС‚Рѕ
 	private ConcurrentHashMap<Integer, Place> cars =
 			new ConcurrentHashMap <Integer, Place>();
 	
-	//Список билетов
+	//РЎРїРёСЃРѕРє Р±РёР»РµС‚РѕРІ
 	private ArrayList<Ticket> tickets; 
 	
-	//Внутренний класс для парковочного места
+	//Р’РЅСѓС‚СЂРµРЅРЅРёР№ РєР»Р°СЃСЃ РґР»СЏ РїР°СЂРєРѕРІРѕС‡РЅРѕРіРѕ РјРµСЃС‚Р°
 	public class Place {
 		protected String carID;
 		protected int ticketID;
@@ -33,7 +33,7 @@ public class Parking extends Thread{
 			this.ticketID = ticketID;
 		}
 		
-		//Вывод номера авто и номера билета
+		//Р’С‹РІРѕРґ РЅРѕРјРµСЂР° Р°РІС‚Рѕ Рё РЅРѕРјРµСЂР° Р±РёР»РµС‚Р°
 		@Override
 		public String toString() {
 			return "carID: " + carID + "; " 
@@ -43,11 +43,10 @@ public class Parking extends Thread{
 		public int getTicketID() {
 			return ticketID;
 		}
-	}
-			
+	}	
 	/*
-	 * Инициализируем конструкторе размер парковки 
-	 * и список билетов для неё
+	 * РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ СЂР°Р·РјРµСЂ РїР°СЂРєРѕРІРєРё 
+	 * Рё СЃРїРёСЃРѕРє Р±РёР»РµС‚РѕРІ РґР»СЏ РЅРµС‘
 	 */
 	Parking(int space) {
 		this.space = space;
@@ -57,12 +56,12 @@ public class Parking extends Thread{
 		}
 	}
 	
-	//Размер парковки
+	//Р Р°Р·РјРµСЂ РїР°СЂРєРѕРІРєРё
 	//public int getSpace() {return space;}
 	
 	/*
-	 * Попытка добавление автомобиля на парковку
-	 * если там есть место
+	 * РџРѕРїС‹С‚РєР° РґРѕР±Р°РІР»РµРЅРёРµ Р°РІС‚РѕРјРѕР±РёР»СЏ РЅР° РїР°СЂРєРѕРІРєСѓ
+	 * РµСЃР»Рё С‚Р°Рј РµСЃС‚СЊ РјРµСЃС‚Рѕ
 	 */
 	public void addCar(Car car) {
 		if(getTicketsCount() >= 1) {
@@ -71,15 +70,15 @@ public class Parking extends Thread{
 		}
 	}
 	
-	//Количество свободных билетов
+	//РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРІРѕР±РѕРґРЅС‹С… Р±РёР»РµС‚РѕРІ
 	public int getTicketsCount() {
 		return tickets.size();
 	}
 	
-	//Вывод списка авто на парковке
+	//Р’С‹РІРѕРґ СЃРїРёСЃРєР° Р°РІС‚Рѕ РЅР° РїР°СЂРєРѕРІРєРµ
 	public void getCarsList() {
 		if(cars.size() == 0) {
-			System.out.println("На парковке нет автомобилей.");
+			System.out.println("РќР° РїР°СЂРєРѕРІРєРµ РЅРµС‚ Р°РІС‚РѕРјРѕР±РёР»РµР№.");
 			return;
 		}
 		int i = 1;
@@ -88,11 +87,10 @@ public class Parking extends Thread{
 			  i++;
 			}	
 	}
-	
 	/*
-	 * Удаление авто с парковки по номеру билета
-	 * если место, соотвествующее билету занято и 
-	 * существует
+	 * РЈРґР°Р»РµРЅРёРµ Р°РІС‚Рѕ СЃ РїР°СЂРєРѕРІРєРё РїРѕ РЅРѕРјРµСЂСѓ Р±РёР»РµС‚Р°
+	 * РµСЃР»Рё РјРµСЃС‚Рѕ, СЃРѕРѕС‚РІРµСЃС‚РІСѓСЋС‰РµРµ Р±РёР»РµС‚Сѓ Р·Р°РЅСЏС‚Рѕ Рё 
+	 * СЃСѓС‰РµСЃС‚РІСѓРµС‚
 	 */
 	public void removeByTicket(int[] mass) {
 
@@ -102,9 +100,9 @@ public class Parking extends Thread{
 			}
 			else {
 				if(mass[i] > space || mass[i] == 0) {
-					System.out.println("Такого места не существует: " + mass[i]);
+					System.out.println("РўР°РєРѕРіРѕ РјРµСЃС‚Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚: " + mass[i]);
 				} else {
-					System.out.println("Место под номером " + mass[i] + " не было занято");
+					System.out.println("РњРµСЃС‚Рѕ РїРѕРґ РЅРѕРјРµСЂРѕРј " + mass[i] + " РЅРµ Р±С‹Р»Рѕ Р·Р°РЅСЏС‚Рѕ");
 				}
 			}
 		}
